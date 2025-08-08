@@ -1,0 +1,48 @@
+Initialize logging with 'attack_prevention.log'
+
+Define enable_syn_cookies():
+    Try to write "1" to "/proc/sys/net/ipv4/tcp_syncookies" to enable SYN cookies
+    If successful, log success
+    If error, log the error
+
+Define block_ip(ip, dur=300):
+    If IP not in b_ips:
+        Try to block the IP with iptables for 'dur' seconds
+        Add the IP and its unblock time to b_ips
+        Log success
+    Else:
+        Log a warning that the IP is already blocked
+
+Define unblock_expired_ips():
+    Define unblock():
+        Get the current time (now)
+        For each IP in b_ips:
+            If the unblock time has passed:
+                Try to unblock the IP with iptables
+                Remove the IP from b_ips
+                Log success
+        Set a timer to call unblock() every 10 seconds
+
+Define enable_rate_limiting(rate="10/second", burst="20"):
+    Try to enable rate limiting for SYN packets with iptables
+    Log success or any errors
+
+Define is_valid_ip(ip):
+    Try to validate the IP format
+    Return True if valid, False if invalid
+
+Define main():
+    Print "Starting prevention system"
+    Call enable_syn_cookies()
+    Call enable_rate_limiting()
+    Start the background thread to unblock expired IPs
+    Loop:
+        Prompt the user for a flagged IP
+        If the user types "exit", break the loop
+        Validate the IP
+        If the IP is valid, prompt for blocking duration
+        If the duration is valid, call block_ip() with the specified duration
+    Log exit event
+
+Call main() to execute the system
+

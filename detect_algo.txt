@@ -1,0 +1,36 @@
+Initialize variables: 
+    THR = 100, MON_TIME = 10, LOG_FILE = "syn_flood.log"
+    pkt_cnt = empty dictionary
+
+Set up logging with LOG_FILE
+
+Function detect(packet):
+    If packet is TCP and SYN:
+        Extract source IP
+        Increment packet count for the source IP
+
+Function reset():
+    Reset pkt_cnt to empty dictionary
+
+Function monitor(iface):
+    Print monitoring message
+    Loop forever:
+        Sniff packets for MON_TIME seconds
+        For each packet, call detect()
+        For each IP in pkt_cnt:
+            If packet count > THR:
+                Print potential SYN flood warning
+                Log warning message
+        Call reset() to clear packet counts
+
+Function monitor_threaded(iface):
+    Start a separate thread for monitor() with the specified interface
+
+Main Program:
+    Prompt for network interface (iface)
+    If iface is not provided, exit program
+    Start monitoring in a separate thread using monitor_threaded()
+    Loop to keep main program alive
+
+End
+

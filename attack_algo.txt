@@ -1,0 +1,46 @@
+Initialize logging with 'attack_log.txt'
+Initialize global variables: pkt (list), lock (Lock)
+
+Define get_subnet(ip):
+    Iterate through network interfaces
+    If IP is found in interface's IPv4 address, return the subnet mask
+
+Define get_ip():
+    Connect to a reachable IP (e.g., 192.168.1.1)
+    Return the local IP address
+
+Define get_net():
+    Call get_ip() and get_subnet()
+    Return the network (IPv4Network) based on local IP and subnet
+
+Define rand_ip(network):
+    Generate and return a random IP in the given network
+
+Define syn_dos(dest_ip, dest_port, cnt, single_ip, same_subnet):
+    Initialize total packets counter
+    Get the network using get_net()
+    If single_ip and same_subnet:
+        Generate a random IP within the same subnet
+    Loop until total packets reaches cnt or is infinite:
+        Generate random source port, sequence number, and window size
+        Construct the SYN packet (IP + TCP)
+        Send packet
+        Log packet details
+        Increment total packets count
+        Sleep for 0.01 seconds
+
+Define update_graph():
+    Plot the packet count over time
+    Display the graph with packets sent
+
+Define main():
+    Clear the console screen
+    Prompt user for target IP (dest_ip), port (dest_port), packet count (cnt)
+    Prompt for single IP usage (single_ip) and same subnet for spoofing (same_subnet)
+    Start 5 threads to run the SYN flood attack
+    Wait for all threads to complete
+    Ask user if they want to visualize attack metrics
+    If yes, call update_graph()
+
+Call main() to execute the attack
+
